@@ -107,6 +107,8 @@ jobs:
         path-to-profile: cover.coverprofile
         parallel: true
     - name: Send to DeepSource
+      env:
+        DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
       run: |
         ./bin/deepsource report --analyzer test-coverage --key go --value-file ./cover.coverprofile
 
