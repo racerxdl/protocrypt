@@ -30,7 +30,7 @@ func main() {
 
 	key := []byte("passphrasewhichneedstobe32bytes!")
 
-	err = pc.EncryptFields([]uint{1,2,3}, key)
+	err = pc.EncryptFields([]uint{1,3}, key)
 	if err != nil {
 		panic(err)
 	}
@@ -45,7 +45,7 @@ func main() {
 
 	y := &sample.TestMessage{}
 
-	err = pc.DecryptAndUnmarshal([]uint{1,2,3}, key, y)
+	err = pc.DecryptAndUnmarshal([]uint{1,3}, key, y)
 	if err != nil {
 		panic(err)
 	}

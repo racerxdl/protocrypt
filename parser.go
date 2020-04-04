@@ -13,12 +13,8 @@ type protoField struct {
 }
 
 func (pf protoField) Encode() []byte {
-	data := make([]byte, binary.MaxVarintLen64)
-
 	key := uint64(pf.FieldType) | uint64(pf.FieldNumber)<<3
-
-	n := binary.PutUvarint(data, key)
-	data = data[:n]
+	data := buildUVarint(key)
 
 	switch pf.FieldType {
 	case proto.WireVarint:
@@ -26,9 +22,8 @@ func (pf protoField) Encode() []byte {
 	case proto.WireFixed64: // 64 bit
 		data = append(data, pf.FieldContent...)
 	case proto.WireBytes:
-		data = append(data, make([]byte, binary.MaxVarintLen64)...)
-		n = binary.PutUvarint(data[n:], uint64(len(pf.FieldContent)))
-		data = append(data[:n], pf.FieldContent...)
+		data = append(data, buildUVarint(uint64(len(pf.FieldContent)))...)
+		data = append(data, pf.FieldContent...)
 	case proto.WireFixed32: // 32 bit
 		data = append(data, pf.FieldContent...)
 	}
