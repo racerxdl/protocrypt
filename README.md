@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/racerxdl/protocrypt/badge.svg?branch=master)](https://coveralls.io/github/racerxdl/protocrypt?branch=master) ![Tests](https://github.com/racerxdl/protocrypt/workflows/Tests/badge.svg?branch=master) [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/racerxdl/protocrypt/?ref=repository-badge)
+[![Coverage Status](https://coveralls.io/repos/github/racerxdl/protocrypt/badge.svg?branch=master)](https://coveralls.io/github/racerxdl/protocrypt?branch=master) ![Push Tests](https://github.com/racerxdl/protocrypt/workflows/Push%20Tests/badge.svg) [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/racerxdl/protocrypt/?ref=repository-badge)
 
 # ProtoCrypt
 
