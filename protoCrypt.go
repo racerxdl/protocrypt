@@ -2,15 +2,25 @@ package protocrypt
 
 import "github.com/golang/protobuf/proto"
 
+// ProtoCrypt is a interface to a Protobuf Field Encrypter / Decrypter
 type ProtoCrypt interface {
+	// EncryptFields encrypts the specified fields with the specified key
+	// If you call more than once, it will encrypt the already encrypted payload
 	EncryptFields(fieldsToEncrypt []uint, key []byte) error
+	// DecryptFields decrypts the specified fields with the specified key
+	// If you call more than once, it will try to decrypt a decrypted content
 	DecryptFields(fieldsToDecrypt []uint, key []byte) error
+	// Serialize serializes the protobuf to protobuf wire format (compatible with proto.Marshal / Unmarshal
 	Serialize() []byte
+	// Unmarshal unmarshals the protocrypt loaded data into a protobuf message
+	// Equivalent to call proto.Unmarshal(pc.Serialize(), pb)
 	Unmarshal(pb proto.Message) error
+	// DecryptAndUnmarshal decrypts and unmarshals protocrypt loaded data into a protobuf message
+	// Equivalent to call DecryptFilds then Unmarshal
 	DecryptAndUnmarshal(fieldsToEncrypt []uint, key []byte, pb proto.Message) error
 }
 
-// New returns a instance of ProtoCrypt for the specified binary data
+// New returns a instance of ProtoCrypt for the specified protobuf wire binary data
 func New(data []byte) ProtoCrypt {
 	return parseProto(data)
 }
