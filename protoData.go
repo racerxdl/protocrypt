@@ -30,10 +30,7 @@ func (pd *protoData) EncryptFields(fieldsToEncrypt []uint, key []byte) error {
 		return err
 	}
 
-	gcm, err := cipher.NewGCM(c)
-	if err != nil {
-		return err
-	}
+	gcm, _ := cipher.NewGCM(c)
 
 	fte.Sort()
 	for _, fieldNum := range fte {
@@ -56,10 +53,7 @@ func (pd *protoData) DecryptFields(fieldsToDecrypt []uint, key []byte) error {
 		return err
 	}
 
-	gcm, err := cipher.NewGCM(c)
-	if err != nil {
-		return err
-	}
+	gcm, _ := cipher.NewGCM(c)
 
 	for _, fieldNum := range ftd {
 		if src, ok := pd.Fields[fieldNum]; ok {

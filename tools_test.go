@@ -8,9 +8,12 @@ import (
 	"testing"
 )
 
-var testKey = []byte("DEADBEEFDEADBEEFDEADBEEF")
-
 func TestEncryptDecryptField(t *testing.T) {
+	testKey, err := GenerateKey()
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	c, err := aes.NewCipher(testKey)
 	if err != nil {
 		t.Fatal(err)
@@ -48,5 +51,16 @@ func TestEncryptDecryptField(t *testing.T) {
 
 	if bytes.Compare(unc.FieldContent, src.FieldContent) != 0 {
 		t.Error("Expected field content to not change")
+	}
+
+	// Test corruptin
+
+	dst.FieldContent[5] = 0xF0
+	dst.FieldContent[6] = 0xF1
+
+	// Decrypt
+	unc, err = decryptField(dst, gcm)
+	if err == nil {
+		t.Error("Expected error on field corruption but got none")
 	}
 }

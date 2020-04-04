@@ -26,14 +26,14 @@ func decryptField(src protoField, gcm cipher.AEAD) (dst protoField, err error) {
 		return dst, err
 	}
 
-	decData, err := gcm.Open(nil, encField.Nonce, encField.Content, nil)
+	decData, err := gcm.Open(nil, encField.GetNonce(), encField.GetContent(), nil)
 	if err != nil {
 		return dst, err
 	}
 
 	return protoField{
 		FieldNumber:  src.FieldNumber,
-		FieldType:    uint(encField.OriginalType),
+		FieldType:    uint(encField.GetOriginalType()),
 		FieldContent: decData,
 	}, nil
 }
@@ -67,4 +67,16 @@ func buildUVarint(v uint64) []byte {
 	data = data[:n]
 
 	return data
+}
+
+// GenerateKey generates a cryptographically secure AES-GCM Key (32 bytes)
+func GenerateKey() ([]byte, error) {
+	key := make([]byte, 32)
+	// populates our key with a cryptographically secure
+	// random sequence
+	if _, err := io.ReadFull(rand.Reader, key); err != nil {
+		return nil, err
+	}
+
+	return key, nil
 }

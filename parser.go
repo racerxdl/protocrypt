@@ -32,7 +32,7 @@ func (pf protoField) Encode() []byte {
 }
 
 func decodeKey(val uint64) (fieldNumber, fieldType uint) {
-	fieldType = uint(val & 3)
+	fieldType = uint(val & 7)
 	fieldNumber = uint(val >> 3)
 
 	return fieldNumber, fieldType
