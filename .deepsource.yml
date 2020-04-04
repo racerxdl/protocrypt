@@ -1,0 +1,16 @@
+version = 1
+
+test_patterns = [
+  "./..."
+]
+
+[[analyzers]]
+name = "go"
+enabled = true
+
+  [analyzers.meta]
+  import_path = "github.com/racerxdl/protocrypt"
+
+[[analyzers]]
+name = "test-coverage"
+enabled = true
