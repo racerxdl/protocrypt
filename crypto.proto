@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package protocrypt;
+
+// EncryptedField is a ProtoCrypt Encrypted field entry
+message EncryptedField {
+  uint32 original_type = 1;
+  bytes nonce = 2;
+  bytes content = 3;
+}

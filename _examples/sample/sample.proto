@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package sample;
+
+// This is just a guid type placeholder
+message TestMessage {
+  string value = 1;
+  SubMessage sub_value = 2;
+  bytes my_data = 3;
+}
+
+message SubMessage {
+  string string_val = 1;
+  int32 int_val = 2;
+  int64 int64_val = 3;
+  bytes huebr = 4;
+}
