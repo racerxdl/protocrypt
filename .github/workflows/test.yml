@@ -1,0 +1,119 @@
+# This is a basic workflow to help you get started with Actions
+
+name: "Tests"
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: [ 'pull_request', 'push' ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Install Go 1.13
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+
+    - name: Install Dependencies
+      run: |
+        echo "Installing DeepSource"
+        curl https://deepsource.io/cli | sh
+        echo "Installing GolangCI Lint"
+        curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sudo bash -s -- -b $GOPATH/bin v1.15.0
+    - name: Run Tests
+      id: tests
+      run: |
+        echo "Checking code format"
+        LINES_FORMATTED=`go fmt ./...`
+        NUM_LINES_FORMATTED=`echo "${LINES_FORMATTED}" | wc -l | tr -d '[:space:]'`
+        LINES_FORMATTED="${LINES_FORMATTED//'%'/'%25'}"
+        LINES_FORMATTED="${LINES_FORMATTED//$'\n'/'%0A'}"
+        LINES_FORMATTED="${LINES_FORMATTED//$'\r'/'%0D'}"
+
+        if [ $NUM_LINES_FORMATTED -eq 1 ]
+        then
+          echo "::set-output name=result_format::No unformatted files! :1st_place_medal:"
+          echo "::set-output name=format_ok::0"
+        else
+          echo "::set-output name=result_format::There are some unformatted files. Please run \`go fmt ./...\` before commiting! :-1: : %0A%0A $LINES_FORMATTED"
+          echo "::set-output name=format_ok::1"
+        fi
+
+        echo "Running GolangCI Lint"
+        golangci-lint run | gawk '{ if(match($0, /([^\:]+):([0-9]*):([0-9]*):(.*)/, m)) print "* **" m[1] "** on line " m[2] ": `" m[4] "`"  }' 2>&1 > lintresult.tmp || true
+        results=$(cat lintresult.tmp)
+        results="${results//'%'/'%25'}"
+        results="${results//$'\n'/'%0A'}"
+        results="${results//$'\r'/'%0D'}"
+        if [ -z "$results" ]
+        then
+          echo "::set-output name=result::No lint issues files! :1st_place_medal:"
+          echo "::set-output name=lint_ok::0"
+        else
+          echo "::set-output name=result::There are some lint issues in your files :-1: : %0A%0A $results"
+          echo "::set-output name=lint_ok::1"
+        fi
+
+        echo "Running race-condition / coverage tests"
+        go test -v -race ./... -coverprofile=cover.coverprofile
+
+        if [ $LINT_OK == 1 ] || [ $FORMAT_OK == 1 ]
+        then
+          echo "Either Lint or Format went wrong"
+          exit 1
+        fi
+
+    - name: comment PR
+      uses: quan-to/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        msg: |
+          ### GolangCI Lint results:
+          ${{ steps.tests.outputs.result }}
+
+          ### File Format results:
+          ${{ steps.tests.outputs.result_format }}
+
+    - name: Check results
+      run: |
+        FORMAT_OK="${{ steps.tests.outputs.format_ok }}"
+        LINT_OK="${{ steps.tests.outputs.lint_ok }}"
+
+        if [ $FORMAT_OK -eq "1" ]
+        then
+          echo "Code format is not OK!"
+          exit 1
+        fi
+
+        if [ $LINT_OK -eq "1" ]
+        then
+          echo "Code format is not OK!"
+          exit 1
+        fi
+
+    - name: Send coverage to Coveralls
+      uses: quan-to/actions-goveralls@v1
+      with:
+        path-to-profile: cover.coverprofile
+        parallel: true
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: quan-to/actions-goveralls@v1
+        with:
+          parallel-finished: true
+
+
+
