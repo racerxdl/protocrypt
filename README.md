@@ -1,10 +1,16 @@
-# protocrypt
+[![Coverage Status](https://coveralls.io/repos/github/racerxdl/protocrypt/badge.svg?branch=master)](https://coveralls.io/github/racerxdl/protocrypt?branch=master) ![Tests](https://github.com/racerxdl/protocrypt/workflows/Tests/badge.svg?branch=master) [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/racerxdl/protocrypt/?ref=repository-badge)
+
+# ProtoCrypt
 
 Protobuf Transparent Encryption
 
 This library encrypts protobuf fields without knowing the underline model. It uses AES-256-GCM to do so.
 
 The usage is pretty simple:
+
+```bash
+go get github.com/racerxdl/protocrypt
+```
 
 ```go
 	// Assuming data is a byte slice with the proto content:
