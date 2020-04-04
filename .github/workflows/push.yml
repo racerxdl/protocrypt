@@ -1,0 +1,63 @@
+# This is a basic workflow to help you get started with Actions
+
+name: "Push Tests"
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: [ 'push' ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Install Go 1.13
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+
+    - name: Install Dependencies
+      run: |
+        echo "Installing DeepSource"
+        curl https://deepsource.io/cli | sh
+        echo "Installing GolangCI Lint"
+        curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sudo bash -s -- -b $GOPATH/bin v1.15.0
+    - name: Run Tests
+      id: tests
+      run: |
+        echo "Checking code format"
+        go fmt ./...
+        echo "Running GolangCI Lint"
+        golangci-lint run || true
+
+        echo "Running race-condition / coverage tests"
+        go test -v -race ./... -coverprofile=cover.coverprofile
+
+    - name: Send coverage to Coveralls
+      uses: quan-to/actions-goveralls@v1
+      with:
+        path-to-profile: cover.coverprofile
+        parallel: true
+    - name: Send to DeepSource
+      env:
+        DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+      run: |
+        ./bin/deepsource report --analyzer test-coverage --key go --value-file ./cover.coverprofile
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: quan-to/actions-goveralls@v1
+        with:
+          parallel-finished: true
+
+
+
