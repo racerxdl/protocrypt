@@ -106,6 +106,9 @@ jobs:
       with:
         path-to-profile: cover.coverprofile
         parallel: true
+    - name: Send to DeepSource
+      run: |
+        ./bin/deepsource report --analyzer test-coverage --key go --value-file ./cover.coverprofile
 
   finish:
     needs: test
