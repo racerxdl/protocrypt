@@ -3,6 +3,22 @@ package protocrypt
 import "github.com/golang/protobuf/proto"
 
 // ProtoCrypt is a interface to a Protobuf Field Encrypter / Decrypter
+// Usage:
+//      // Assuming data is a byte slice with the original protobuf in wire format
+//      pc := protocrypt.New(data)
+//
+//      key, err := protocrypt.GenerateKey()
+//      if err != nil {
+//          panic(err)
+//      }
+//
+//      err = pc.EncryptFields([]uint{1,3}, key)
+//      if err != nil {
+//          panic(err)
+//      }
+//
+//      data = pc.Serialize()
+//      // data now contains encrypted fields 1 and 3 with the specified key
 type ProtoCrypt interface {
 	// EncryptFields encrypts the specified fields with the specified key
 	// If you call more than once, it will encrypt the already encrypted payload

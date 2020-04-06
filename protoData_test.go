@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"github.com/golang/protobuf/proto"
+	"github.com/racerxdl/protocrypt/internal"
 	"math"
 	"math/rand"
 	"testing"
@@ -13,7 +14,7 @@ func TestProtoData_DecryptAndUnmarshal(t *testing.T) {
 	randData, _ := GenerateKey()
 	randData2, _ := GenerateKey()
 
-	x := &EncryptedField{
+	x := &internal.EncryptedField{
 		OriginalType: rand.Uint32(),
 		Nonce:        randData,
 		Content:      randData2,
@@ -29,7 +30,7 @@ func TestProtoData_DecryptAndUnmarshal(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	y := &EncryptedField{}
+	y := &internal.EncryptedField{}
 
 	err = pb.DecryptAndUnmarshal([]uint{1, 2, 3}, randData, y)
 	if err != nil {
@@ -194,7 +195,7 @@ func TestProtoData_Serialize(t *testing.T) {
 	randData, _ := GenerateKey()
 	randData2, _ := GenerateKey()
 
-	x := &EncryptedField{
+	x := &internal.EncryptedField{
 		OriginalType: rand.Uint32(),
 		Nonce:        randData,
 		Content:      randData2,
@@ -207,7 +208,7 @@ func TestProtoData_Serialize(t *testing.T) {
 
 	pb = New(data)
 
-	y := &EncryptedField{}
+	y := &internal.EncryptedField{}
 
 	err := pb.Unmarshal(y)
 	if err != nil {
@@ -227,7 +228,7 @@ func TestProtoData_Unmarshal(t *testing.T) {
 	randData, _ := GenerateKey()
 	randData2, _ := GenerateKey()
 
-	x := &EncryptedField{
+	x := &internal.EncryptedField{
 		OriginalType: rand.Uint32(),
 		Nonce:        randData,
 		Content:      randData2,
@@ -237,7 +238,7 @@ func TestProtoData_Unmarshal(t *testing.T) {
 
 	pb := New(data)
 
-	y := &EncryptedField{}
+	y := &internal.EncryptedField{}
 
 	err := pb.Unmarshal(y)
 	if err != nil {

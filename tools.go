@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/binary"
 	"github.com/golang/protobuf/proto"
+	"github.com/racerxdl/protocrypt/internal"
 	"io"
 )
 
@@ -20,7 +21,7 @@ func generateNonce(gcm cipher.AEAD) ([]byte, error) {
 }
 
 func decryptField(src protoField, gcm cipher.AEAD) (dst protoField, err error) {
-	encField := &EncryptedField{}
+	encField := &internal.EncryptedField{}
 	err = proto.Unmarshal(src.FieldContent, encField)
 	if err != nil {
 		return dst, err
@@ -46,7 +47,7 @@ func encryptField(src protoField, gcm cipher.AEAD) (dst protoField, err error) {
 
 	encData := gcm.Seal(nil, nonce, src.FieldContent, nil)
 
-	encField := &EncryptedField{
+	encField := &internal.EncryptedField{
 		OriginalType: uint32(src.FieldType),
 		Nonce:        nonce,
 		Content:      encData,

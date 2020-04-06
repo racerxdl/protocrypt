@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package protocrypt;
+package internal;
 
 // EncryptedField is a ProtoCrypt Encrypted field entry
 message EncryptedField {

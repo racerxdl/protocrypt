@@ -28,7 +28,10 @@ func main() {
 	pc := protocrypt.New(data)
 
 
-	key := []byte("passphrasewhichneedstobe32bytes!")
+	key, err := protocrypt.GenerateKey()
+	if err != nil {
+		panic(err)
+	}
 
 	err = pc.EncryptFields([]uint{1,3}, key)
 	if err != nil {

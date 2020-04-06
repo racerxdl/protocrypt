@@ -1,4 +1,4 @@
-package protocrypt
+package internal
 
 import "testing"
 

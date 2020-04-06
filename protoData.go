@@ -5,6 +5,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"github.com/golang/protobuf/proto"
+	"github.com/racerxdl/protocrypt/internal"
 )
 
 type protoData struct {
@@ -24,7 +25,7 @@ func (pd *protoData) DecryptAndUnmarshal(fieldsToEncrypt []uint, key []byte, pb 
 }
 
 func (pd *protoData) EncryptFields(fieldsToEncrypt []uint, key []byte) error {
-	fte := UIntSlice(fieldsToEncrypt)
+	fte := internal.UIntSlice(fieldsToEncrypt)
 	c, err := aes.NewCipher(key)
 	if err != nil {
 		return err
@@ -47,7 +48,7 @@ func (pd *protoData) EncryptFields(fieldsToEncrypt []uint, key []byte) error {
 }
 
 func (pd *protoData) DecryptFields(fieldsToDecrypt []uint, key []byte) error {
-	ftd := UIntSlice(fieldsToDecrypt)
+	ftd := internal.UIntSlice(fieldsToDecrypt)
 	c, err := aes.NewCipher(key)
 	if err != nil {
 		return err
