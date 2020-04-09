@@ -49,7 +49,7 @@ func TestEncryptDecryptField(t *testing.T) {
 		t.Error("Expected field number to not change")
 	}
 
-	if bytes.Compare(unc.FieldContent, src.FieldContent) != 0 {
+	if bytes.Equal(unc.FieldContent, src.FieldContent) {
 		t.Error("Expected field content to not change")
 	}
 

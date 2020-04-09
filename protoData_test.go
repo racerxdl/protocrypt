@@ -41,7 +41,7 @@ func TestProtoData_DecryptAndUnmarshal(t *testing.T) {
 		t.Errorf("Expected Original Type to be preserved. Expected %d got %d", x.OriginalType, y.OriginalType)
 	}
 
-	if bytes.Compare(x.Nonce, y.Nonce) != 0 && bytes.Compare(x.Content, y.Content) != 0 {
+	if bytes.Equal(x.Nonce, y.Nonce) && bytes.Equal(x.Content, y.Content) {
 		t.Error("Expected Content to be preserved.")
 	}
 }
@@ -106,7 +106,7 @@ func TestProtoData_EncryptFields(t *testing.T) {
 			t.Errorf("[%d] Expected encrypted field type to be bytes. Got %d", i, v.FieldType)
 		}
 
-		if bytes.Compare(v.FieldContent, fields[i].FieldContent) == 0 {
+		if !bytes.Equal(v.FieldContent, fields[i].FieldContent) {
 			t.Errorf("[%d] Expected content to be encrypt but found plaintext", i)
 		}
 	}
@@ -172,7 +172,7 @@ func TestProtoData_DecryptFields(t *testing.T) {
 			t.Errorf("[%d] Expected encrypted field type to be preserved. Expected %d Got %d", i, fields[i].FieldType, v.FieldType)
 		}
 
-		if bytes.Compare(v.FieldContent, fields[i].FieldContent) != 0 {
+		if bytes.Equal(v.FieldContent, fields[i].FieldContent) {
 			t.Errorf("[%d] Expected content to be preserved", i)
 		}
 	}
@@ -219,7 +219,7 @@ func TestProtoData_Serialize(t *testing.T) {
 		t.Errorf("Expected Original Type to be preserved. Expected %d got %d", x.OriginalType, y.OriginalType)
 	}
 
-	if bytes.Compare(x.Nonce, y.Nonce) != 0 && bytes.Compare(x.Content, y.Content) != 0 {
+	if bytes.Equal(x.Nonce, y.Nonce) && bytes.Equal(x.Content, y.Content) {
 		t.Error("Expected Content to be preserved.")
 	}
 }
@@ -249,7 +249,7 @@ func TestProtoData_Unmarshal(t *testing.T) {
 		t.Errorf("Expected Original Type to be preserved. Expected %d got %d", x.OriginalType, y.OriginalType)
 	}
 
-	if bytes.Compare(x.Nonce, y.Nonce) != 0 && bytes.Compare(x.Content, y.Content) != 0 {
+	if bytes.Equal(x.Nonce, y.Nonce) && bytes.Equal(x.Content, y.Content) {
 		t.Error("Expected Content to be preserved.")
 	}
 }
