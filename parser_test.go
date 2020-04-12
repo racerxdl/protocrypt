@@ -56,7 +56,7 @@ func TestProtoField_Encode(t *testing.T) {
 		t.Errorf("Expected fieldNumber to be %d got %d", pf.FieldNumber, newPf.FieldNumber)
 	}
 
-	if bytes.Compare(newPf.FieldContent, pf.FieldContent) != 0 {
+	if !bytes.Equal(newPf.FieldContent, pf.FieldContent) {
 		t.Errorf("Expected fieldContent to be preserved")
 	}
 }

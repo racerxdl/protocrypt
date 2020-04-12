@@ -50,7 +50,7 @@ func TestNew(t *testing.T) {
 			t.Errorf("[%d] Expected encrypted field type to be preserved. Expected %d Got %d", i, newPb.Fields[i].FieldType, v.FieldType)
 		}
 
-		if bytes.Compare(v.FieldContent, newPb.Fields[i].FieldContent) != 0 {
+		if !bytes.Equal(v.FieldContent, newPb.Fields[i].FieldContent) {
 			t.Errorf("[%d] Expected content to be preserved", i)
 		}
 	}
